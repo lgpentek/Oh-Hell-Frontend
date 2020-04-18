@@ -126,27 +126,55 @@ function Opponent(props) {
   for (let i = 0; i < Object.keys(props.state.state.scores.round).length; i++) {
     scoreSum += Object.values(props.state.state.scores.round)[i][name];
   }
+
+  if (props.betting) {
+    return (
+      <div style={{ border: borderColor }} className="opponent">
+        <PlayerInfo>
+          <h4 style={{ "font-family": "Lobster" }}>{name}</h4><hr />
+          <span>Tippelés</span><br />
+         <span>Ütés: {tricks}</span><br />
+         <span>Pont: {scoreSum}</span>
+       </PlayerInfo>
+       <div
+         style={{ float: "right", "padding-top": "10%" }}
+         className="playingCards"
+       >
+         {(() => {
+            if (props.card) {
+              //console.log(name, " played ", props.card)
+              return <Card code={props.card.id} />;
+            } /*else if ( (props.firstcard) && ( (props.round ==1) || (props.round == props.numRounds) ) ) {
+              console.log(`${name} egyetlen lapja`);
+              return <Card code={props.firstcard} />;
+            }*/
+         })()}
+       </div>
+     </div>
+    );
+  } else {
   return (
     <div style={{ border: borderColor }} className="opponent">
       <PlayerInfo>
         <h4 style={{ "font-family": "Lobster" }}>{name}</h4><hr />
-        <span>Bet: {bets}</span><br />
-        <span>Tricks: {tricks}</span><br />
-        <span>Score: {scoreSum}</span>
-      </PlayerInfo>
-      <div
-        style={{ float: "right", "padding-top": "10%" }}
-        className="playingCards"
-      >
-        {(() => {
+        <span>Tipp: {bets}</span><br />
+       <span>Ütés: {tricks}</span><br />
+       <span>Pont: {scoreSum}</span>
+     </PlayerInfo>
+     <div
+       style={{ float: "right", "padding-top": "10%" }}
+       className="playingCards"
+     >
+       {(() => {
           if (props.card) {
-            //console.log(name, " played ", props.card)
-            return <Card code={props.card.id} />;
-          }
-        })()}
-      </div>
-    </div>
+           //console.log(name, " played ", props.card)
+           return <Card code={props.card.id} />;
+         }
+       })()}
+     </div>
+   </div>
   );
+  }
 }
 
 function Card(props) {
@@ -184,11 +212,10 @@ class MessageTicker extends Component {
   }
   render() {
     const MessageDiv = styled.div`
-      position: absolute;
+      position: relative;
       bottom: 0px;
       right: 0px;
       width:100%;
-      max-height:90px;
       overflow:hidden;
     `;
     const MessageWindow = styled.div`
@@ -196,7 +223,7 @@ class MessageTicker extends Component {
       box-shadow: inset 0 7px 10px 0px rgba(0,0,0,0.4);
       color:white;
       opacity: 0.7;
-      max-height:80px;
+      max-height:110px;
       padding: 15px;
     `;
     let messages = this.props.messages.map(message => <p>{message}</p>);
@@ -217,14 +244,22 @@ class MessageTicker extends Component {
 
 function GameTable(props) {
   console.log("Rendering gametable", props);
-  let players = props.state.players.filter(
+/*  let players = props.state.players.filter(
     username => username !== props.username
   );
+*/
+let players = props.state.players;
+let player_help = players.shift();
+while (player_help !== props.username) {
+  players.push(player_help);
+  player_help = players.shift();
+}
+
   let dist = threeDistribution(players);
   let containers = [];
-  for (let i = 0; i < dist.length; i++) {
+  for (let i = dist.length-1; i >= 0 ; i--) {
     containers[i] = [];
-    for (let j = 0; j < dist[i]; j++) {
+    for (let j = dist[i]-1; j >= 0 ; j--) {
       let player = players.shift();
       const turn = props.state.turn === player;
       console.log(`${player}'s turn? ${turn} `);
@@ -235,6 +270,7 @@ function GameTable(props) {
           state={props}
           card={props.state.cardsInPlay[player]}
           name={player}
+          betting={props.state.betting}
         />
       );
     }
@@ -255,10 +291,7 @@ function GameTable(props) {
       <div id="top-table">{containers[1]}</div>
       <div id="right-table">{containers[2]}</div>
       <div id="table">
-        <h3 style={{ "font-family": "Lobster" }}>Oh Hell</h3>
-        <div className="playingCards inText">
-          Trump: <Card code={props.state.trumpCard.id} />
-        </div>
+        <h3 style={{ "font-family": "Lobster" }}>Ri-ki-ki</h3>
         <p>Turn: {props.state.turn}</p>
         <p>Dealer: {props.state.dealer}</p>
         <MessageTicker messages={props.state.messages} />
@@ -266,9 +299,9 @@ function GameTable(props) {
       <div id="hand" style={{ border: borderColor }} className="playingCards">
         <h3 style={{ "font-family": "Lobster" }}>{props.username}</h3>
         <div>
-          <PersonalStats>Bet: {bets}</PersonalStats>
-          <PersonalStats>Tricks: {tricks}</PersonalStats>
-          <PersonalStats>Score: {scoreSum}</PersonalStats>
+          <PersonalStats>Tipp: {bets}</PersonalStats>
+          <PersonalStats>Ütés: {tricks}</PersonalStats>
+          <PersonalStats>Pont: {scoreSum}</PersonalStats>
         </div>
         <BetMaker
           betFunc={props.server.bet}
@@ -276,12 +309,15 @@ function GameTable(props) {
           show={props.state.betting}
           maxBet={props.state.hand.length}
         />
-        <Hand
+       <Hand
           play={cardID => {
             props.server.playCard(cardID);
           }}
           state={props}
           cards={props.state.hand.map(card => card.id)}
+          betting={props.state.betting}
+          round={props.state.round}
+          maxBet={props.state.hand.length}
         />
       </div>
     </div>
@@ -309,7 +345,7 @@ function BetMaker(props) {
         </Button>
       );
     }
-    return <div>Click to bet: {betButtons}</div>;
+    return <div>Klikk a tippeléshez: {betButtons}</div>;
   } else {
     return null;
   }
@@ -325,11 +361,18 @@ function Hand(props) {
       </li>
     );
   });
-  return (
-    <ul className="hand">
-      {cards}
-    </ul>
-  );
+    if ( (props.betting) && (props.maxBet ==1) )
+      return (
+        <ul className="hand">
+          {}
+        </ul>
+      );
+    else
+      return (
+        <ul className="hand">
+          {cards}
+        </ul>
+      );
 }
 
 function threeDistribution(listorlength) {

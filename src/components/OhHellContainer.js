@@ -15,6 +15,8 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import { Dropdown, MenuItem, Glyphicon } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
 class OhHellContainer extends Component {
   constructor() {
@@ -39,7 +41,7 @@ class OhHellContainer extends Component {
         <div>
           <Route path="/" render={() => <Redirect to="/lobby" />} />
           <div>
-            <NavButton />
+            <NavButton />		  
           </div>
           <Route
             path="/login"

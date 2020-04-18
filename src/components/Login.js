@@ -96,7 +96,7 @@ class Login extends Component {
     return (
       <div className="overlay" style={{ margin: "0 auto", maxWidth: "650px" }}>
         <HeaderPanel>
-          <LobbyHeader>Oh Hell!</LobbyHeader>
+          <LobbyHeader>Ri-ki-ki</LobbyHeader>
         </HeaderPanel>
         <ListGroupItem className="overlay">
           <Form>

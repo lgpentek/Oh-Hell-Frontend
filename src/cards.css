@@ -19,10 +19,10 @@
     -moz-border-radius: .3em;
     -webkit-border-radius: .3em;
     -khtml-border-radius: .3em;
-    padding: .25em;
-    margin: 0 .5em .5em 0;
+/*    padding: .25em;*/
+    margin: 0 0em 0em 0;
     text-align: center;
-    font-size: 1.2em; /* @change: adjust this value to make bigger or smaller cards */
+    font-size: 1.6em; /* @change: adjust this value to make bigger or smaller cards */
     font-weight: normal;
     font-family: Arial, sans-serif;
     position: relative;
@@ -49,7 +49,7 @@
     text-indent: -4000px;
     background-color: #ccc;
     background-repeat: repeat;
-    background-image: url(data:image/gif;base64,R0lGODlhJAAkAJEAAOjFsezdztOKbL5QKCH5BAAAAAAALAAAAAAkACQAAAL/HC4RAqm/mmLHyHmAbczB11Ea8ombJKSgKo6Z17pXFznmS1JptiX0z3vVhpEKDoUIkoa0olGIUeZUk1RI6Yn2mh/FDAt6frOrRRTqXPpsVLYugzxaVy+YcBdnoWPZOT0E4eckQtZFZBjWoHixQFWl6Nhol6R2p1Okt5TGaEWZA6fjiMdhZgPHeWrTWGVq+jTZg1HYyAEWKLYzmyiGKoUimilz+YYryyTlg5RcDJSAbNx0Q7lMcbIGEyzTK8zVdfVaImzs/QV+prYqWWW2ObkoOApM/Em/rUlIm7fijs8a2EEKEaZ3AsMUgneEU6RcpJbZ27aGHkAO2Ors8xQH1IR0Bn5YnOtVAAA7); /* image is "Pattern 069" from http://www.squidfingers.com/patterns/ */
+/*    background-image: url(data:image/gif;base64,R0lGODlhJAAkAJEAAOjFsezdztOKbL5QKCH5BAAAAAAALAAAAAAkACQAAAL/HC4RAqm/mmLHyHmAbczB11Ea8ombJKSgKo6Z17pXFznmS1JptiX0z3vVhpEKDoUIkoa0olGIUeZUk1RI6Yn2mh/FDAt6frOrRRTqXPpsVLYugzxaVy+YcBdnoWPZOT0E4eckQtZFZBjWoHixQFWl6Nhol6R2p1Okt5TGaEWZA6fjiMdhZgPHeWrTWGVq+jTZg1HYyAEWKLYzmyiGKoUimilz+YYryyTlg5RcDJSAbNx0Q7lMcbIGEyzTK8zVdfVaImzs/QV+prYqWWW2ObkoOApM/Em/rUlIm7fijs8a2EEKEaZ3AsMUgneEU6RcpJbZ27aGHkAO2Ors8xQH1IR0Bn5YnOtVAAA7); /* image is "Pattern 069" from http://www.squidfingers.com/patterns/ */
     background-image: -moz-repeating-linear-gradient(34% 6% 135deg,#0F1E59, #75A1BF, #3E3E63 50%);
     background-image: -webkit-gradient(radial, center center, 20, center center, 80, from(#3c3), color-stop(0.4, #363), to(#030));
     /* yes, it's intentional that Mozilla, Webkit, Opera and IE all will get different backgrounds ... why not? :) */
@@ -100,10 +100,14 @@
 .playingCards .card .rank,
 .playingCards .card .suit {
     display: block;
+    width: .9em;
     line-height: 1;
-    text-align: left;
+    text-align: center;
+/*    letter-spacing: -.15em;*/
 }
 .playingCards .card .rank {
+    letter-spacing: -.15em;
+    text-indent : -.1em;
 }
 .playingCards .card .suit {
     line-height: .7;
@@ -163,11 +167,13 @@
 /* inner multiple suits */
 .playingCards .card .suit:after {
     display: block;
-    margin-top: -.8em;
+    margin-top: -1.7em;
+    margin-left: 0.9em;
+    width: 2.5em;
     text-align: center;
     white-space: pre;
-    line-height: .9;
-    font-size: 1.3em;
+    line-height: 1.5;
+    font-size: 0.8em;
     word-spacing: -.05em;
 }
 
@@ -275,7 +281,7 @@
     content: "\2660\00A0\00A0\2660 \A\2660\00A0\2660\00A0\2660 \A\2660\00A0\00A0\2660";
 }
 .playingCards .card.rank-8.spades .suit:after {
-    content: "\2660\00A0\2660\00A0\2660 \A\2660\00A0\00A0\2660 \A\2660\00A0\2660\00A0\2660";
+    content: "\2660\00A0\2660\00A0\2660 \A\00A0\2660\00A0\00A0\2660 \A\2660\00A0\2660\00A0\2660";
 }
 .playingCards .card.rank-9.spades .suit:after {
     content: "\2660\00A0\2660\00A0\2660 \A\2660\00A0\2660\00A0\2660 \A\2660\00A0\2660\00A0\2660";
@@ -488,24 +494,24 @@
     bottom: 0;
 }
 .playingCards ul.hand li:nth-child(1)  { left: 0; }
-.playingCards ul.hand li:nth-child(2)  { left: 1.1em; }
-.playingCards ul.hand li:nth-child(3)  { left: 2.2em; }
-.playingCards ul.hand li:nth-child(4)  { left: 3.3em; }
-.playingCards ul.hand li:nth-child(5)  { left: 4.4em; }
-.playingCards ul.hand li:nth-child(6)  { left: 5.5em; }
-.playingCards ul.hand li:nth-child(7)  { left: 6.6em; }
-.playingCards ul.hand li:nth-child(8)  { left: 7.7em; }
-.playingCards ul.hand li:nth-child(9)  { left: 8.8em; }
-.playingCards ul.hand li:nth-child(10) { left: 9.9em; }
-.playingCards ul.hand li:nth-child(11) { left: 11em; }
-.playingCards ul.hand li:nth-child(12) { left: 12.1em; }
-.playingCards ul.hand li:nth-child(13) { left: 13.2em; }
+.playingCards ul.hand li:nth-child(2)  { left: 1.3em; }
+.playingCards ul.hand li:nth-child(3)  { left: 2.6em; }
+.playingCards ul.hand li:nth-child(4)  { left: 3.9em; }
+.playingCards ul.hand li:nth-child(5)  { left: 5.2em; }
+.playingCards ul.hand li:nth-child(6)  { left: 6.5em; }
+.playingCards ul.hand li:nth-child(7)  { left: 7.8em; }
+.playingCards ul.hand li:nth-child(8)  { left: 9.1em; }
+.playingCards ul.hand li:nth-child(9)  { left: 10.4em; }
+.playingCards ul.hand li:nth-child(10) { left: 11.7em; }
+.playingCards ul.hand li:nth-child(11) { left: 13em; }
+.playingCards ul.hand li:nth-child(12) { left: 14.3em; }
+.playingCards ul.hand li:nth-child(13) { left: 15.6em; }
 
-.playingCards ul.hand li:nth-child(14) { left: 14.3em; }
-.playingCards ul.hand li:nth-child(15) { left: 15.4em; }
-.playingCards ul.hand li:nth-child(16) { left: 16.5em; }
-.playingCards ul.hand li:nth-child(17) { left: 17.6em; }
-.playingCards ul.hand li:nth-child(18) { left: 18.7em; }
+.playingCards ul.hand li:nth-child(14) { left: 16.9em; }
+.playingCards ul.hand li:nth-child(15) { left: 18.2em; }
+.playingCards ul.hand li:nth-child(16) { left: 19.5em; }
+.playingCards ul.hand li:nth-child(17) { left: 20.8em; }
+.playingCards ul.hand li:nth-child(18) { left: 22.1em; }
 .playingCards ul.hand li:nth-child(19) { left: 19.8em; }
 .playingCards ul.hand li:nth-child(20) { left: 20.9em; }
 .playingCards ul.hand li:nth-child(21) { left: 22em; }

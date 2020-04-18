@@ -2,7 +2,9 @@
  * Any component that makes a request should import class.
  */
 
-const server_url = "https://oh-hell.herokuapp.com";
+const server_url = "http://89.133.228.140:4000";
+//const server_url = "http://rikikiserver.dyndnss.net";
+//const server_url = "http://localhost:4000";
 //const server_url = 'https://oh-hell.herokuapp.com';
 
 //allow instantiating with gameID and callback
