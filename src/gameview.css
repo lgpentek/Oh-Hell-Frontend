@@ -47,6 +47,20 @@ div .opponent{
   margin:5px;
 }
 
+div .fejléc{
+  min-height:100px;
+  min-width:100px;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 20px 0px;
+  color: white;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.fejléc fl{
+  margin:5px;
+}
+
 #left-table {
   grid-column-start: 1;
   grid-column-end: 2;

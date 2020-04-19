@@ -59,7 +59,7 @@ class GameView extends Component {
 
   stateCallback(response) {
     if (response.alert) {
-      window.alert(response.alert);
+      //window.alert(response.alert);
     }
     if (response.state && response.message) {
       this.setState({
@@ -115,7 +115,16 @@ function Opponent(props) {
   let name = props.name;
   let bets = props.state.state.bets[name];
   let tricks = props.state.state.tricks[name] || 0;
-  let borderColor = props.turn ? "3px solid yellow" : "2px solid #751010";
+  let borderColor;
+  if (props.betting)
+    borderColor = !Number.isInteger(bets) 
+    ? "3px solid yellow"
+    : "2px solid #751010";
+  else
+    borderColor = props.turn
+    ? "3px solid yellow"
+    : "2px solid #751010";
+
   let PlayerInfo = styled.div`
     display:inline-block;
     float:left;
@@ -142,12 +151,8 @@ function Opponent(props) {
        >
          {(() => {
             if (props.card) {
-              //console.log(name, " played ", props.card)
               return <Card code={props.card.id} />;
-            } /*else if ( (props.firstcard) && ( (props.round ==1) || (props.round == props.numRounds) ) ) {
-              console.log(`${name} egyetlen lapja`);
-              return <Card code={props.firstcard} />;
-            }*/
+            } 
          })()}
        </div>
      </div>
@@ -250,6 +255,42 @@ function GameTable(props) {
 */
 let players = props.state.players;
 let player_help = players.shift();
+let PlayerInfo = styled.div`
+display:inline-block;
+float:left;
+margin-right:10px;
+text-align:center;
+`;
+let hivo;
+
+while (player_help !== props.state.turn) {
+  players.push(player_help);
+  player_help = players.shift();
+}
+players.unshift(player_help);
+hivo = player_help;
+player_help = players.pop();
+
+while (props.state.cardsInPlay[player_help]) {
+  hivo = player_help;
+  players.unshift(player_help);
+  player_help = players.pop();
+}
+
+if (props.state.cardsInPlay[hivo]) {
+  let card = props.state.cardsInPlay[hivo];
+  let szin;
+  if ( card.suit == "Clubs" )
+    szin="Treff";
+  else if ( card.suit == "Diamonds" )
+    szin="Káró";
+  else if ( card.suit == "Hearts" )
+    szin="Kőr";
+  else if ( card.suit == "Spades" )
+    szin="Pikk";
+
+  hivo = hivo + " (" + szin + " " + card.value + ")";
+}
 while (player_help !== props.username) {
   players.push(player_help);
   player_help = players.shift();
@@ -282,7 +323,14 @@ while (player_help !== props.username) {
   }
   let bets = props.state.bets[props.username];
   let tricks = props.state.tricks[props.username] || 0;
-  let borderColor = props.state.turn === props.username
+  let borderColor;
+
+  if (props.state.betting)
+    borderColor = !Number.isInteger(bets) 
+    ? "3px solid yellow"
+    : "2px solid #751010";
+  else
+    borderColor = props.state.turn === props.username
     ? "3px solid yellow"
     : "2px solid #751010";
   return (
@@ -292,23 +340,40 @@ while (player_help !== props.username) {
       <div id="right-table">{containers[2]}</div>
       <div id="table">
         <h3 style={{ "font-family": "Lobster" }}>Ri-ki-ki</h3>
-        <p>Turn: {props.state.turn}</p>
-        <p>Dealer: {props.state.dealer}</p>
+        <p>Hívó: {hivo}</p>
         <MessageTicker messages={props.state.messages} />
       </div>
       <div id="hand" style={{ border: borderColor }} className="playingCards">
-        <h3 style={{ "font-family": "Lobster" }}>{props.username}</h3>
-        <div>
-          <PersonalStats>Tipp: {bets}</PersonalStats>
-          <PersonalStats>Ütés: {tricks}</PersonalStats>
-          <PersonalStats>Pont: {scoreSum}</PersonalStats>
+        <ul>
+        <PlayerInfo>
+          <h3 style={{ "font-family": "Lobster" }}>{props.username}</h3>
+          <div>
+            <PersonalStats>Tipp: {bets}</PersonalStats>
+            <PersonalStats>Ütés: {tricks}</PersonalStats>
+            <PersonalStats>Pont: {scoreSum}</PersonalStats>
+
+          </div>
+        </PlayerInfo>
+        <div
+           style={{ float: "right", "padding-right": "0%" }}
+           className="playingCards"
+          >
+           {(() => {
+              if (props.state.cardsInPlay[props.username]) {
+                return <Card code={props.state.cardsInPlay[props.username].id} />;
+              } 
+           })()}
         </div>
+        </ul>
+
+
         <BetMaker
           betFunc={props.server.bet}
           bet={props.state.bets[props.username]}
           show={props.state.betting}
           maxBet={props.state.hand.length}
         />
+
        <Hand
           play={cardID => {
             props.server.playCard(cardID);
@@ -319,6 +384,7 @@ while (player_help !== props.username) {
           round={props.state.round}
           maxBet={props.state.hand.length}
         />
+ 
       </div>
     </div>
   );
