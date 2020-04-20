@@ -261,35 +261,41 @@ float:left;
 margin-right:10px;
 text-align:center;
 `;
-let hivo;
+let gameinfo = "";
 
-while (player_help !== props.state.turn) {
-  players.push(player_help);
-  player_help = players.shift();
-}
-players.unshift(player_help);
-hivo = player_help;
-player_help = players.pop();
-
-while (props.state.cardsInPlay[player_help]) {
-  hivo = player_help;
+if (props.state.betting)
+  gameinfo = "osztó: " + props.state.dealer;
+else {
+  while (player_help !== props.state.turn) {
+    players.push(player_help);
+    player_help = players.shift();
+  }
+  gameinfo = player_help;
   players.unshift(player_help);
   player_help = players.pop();
-}
 
-if (props.state.cardsInPlay[hivo]) {
-  let card = props.state.cardsInPlay[hivo];
-  let szin;
-  if ( card.suit == "Clubs" )
-    szin="Treff";
-  else if ( card.suit == "Diamonds" )
-    szin="Káró";
-  else if ( card.suit == "Hearts" )
+  while (props.state.cardsInPlay[player_help]) {
+    gameinfo = player_help;
+    players.unshift(player_help);
+    player_help = players.pop();
+  }
+
+  if (props.state.cardsInPlay[gameinfo]) {
+    let card = props.state.cardsInPlay[gameinfo];
+    let szin;
+    if ( card.suit == "Clubs" )
+      szin="Treff";
+    else if ( card.suit == "Diamonds" )
+      szin="Káró";
+    else if ( card.suit == "Hearts" )
     szin="Kőr";
-  else if ( card.suit == "Spades" )
-    szin="Pikk";
+    else if ( card.suit == "Spades" )
+      szin="Pikk";
 
-  hivo = hivo + " (" + szin + " " + card.value + ")";
+    gameinfo =  "hívás: " + gameinfo + " (" + szin + " " + card.value + ")";
+  }
+  else
+    gameinfo = "hívás: " + gameinfo;
 }
 while (player_help !== props.username) {
   players.push(player_help);
@@ -339,8 +345,8 @@ while (player_help !== props.username) {
       <div id="top-table">{containers[1]}</div>
       <div id="right-table">{containers[2]}</div>
       <div id="table">
-        <h3 style={{ "font-family": "Lobster" }}>Ri-ki-ki</h3>
-        <p>Hívó: {hivo}</p>
+        <h3 style={{ "font-family": "Lobster" }}>{props.state.gameTitle}</h3>
+        <p>{gameinfo}</p>
         <MessageTicker messages={props.state.messages} />
       </div>
       <div id="hand" style={{ border: borderColor }} className="playingCards">
@@ -359,9 +365,8 @@ while (player_help !== props.username) {
            className="playingCards"
           >
            {(() => {
-              if (props.state.cardsInPlay[props.username]) {
+              if (props.state.cardsInPlay[props.username] && !props.state.betting) 
                 return <Card code={props.state.cardsInPlay[props.username].id} />;
-              } 
            })()}
         </div>
         </ul>
@@ -411,7 +416,7 @@ function BetMaker(props) {
         </Button>
       );
     }
-    return <div>Klikk a tippeléshez: {betButtons}</div>;
+    return <div>Tipped: {betButtons}</div>;
   } else {
     return null;
   }
